@@ -58,4 +58,23 @@ d3.csv("assets/data/data.csv").then(function(healthData) {
 
   chartGroup.append("g")
     .call(yAxis);
+
+  // line generator
+  var line = d3.line()
+    .x(d => xPovertyScale(d.poverty))
+    .y(d => yHealthcareScale(d.healthcare));
+
+  // append circles
+  var circlesGroup = chartGroup.selectAll("circle")
+    .data(healthData)
+    .enter()
+    .append("circle")
+    .attr("cx", d => xPovertyScale(d.poverty))
+    .attr("cy", d => yHealthcareScale(d.healthcare))
+    .attr("r", "10")
+    .attr("fill", "gold")
+    .attr("stroke-width", "1")
+    .attr("stroke", "black");
+    
+    
 });
