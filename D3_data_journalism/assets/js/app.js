@@ -29,4 +29,6 @@ var chartGroup = svg.append("g")
 
 
 //2
-
+d3.csv("assets/data/data.csv").then(function(data) {
+    console.log(data);
+});
