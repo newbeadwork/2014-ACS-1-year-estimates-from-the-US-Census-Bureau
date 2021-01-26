@@ -69,17 +69,22 @@ d3.csv("assets/data/data.csv").then(function(healthData) {
     .attr("cx", d => xPovertyScale(d.poverty))
     .attr("cy", d => yHealthcareScale(d.healthcare))
     .attr("r", "10")
-    .attr("fill", "gold")
+    .attr("fill", "green")
     .attr("stroke-width", "1")
     .attr("stroke", "black");
 
-  chartGroup.selectAll("text")
+  chartGroup.selectAll(null)
     .data(healthData)
     .enter()
+    .append("g")
     .append("text")
     .text(d => d.abbr)
     .attr("x", d => xPovertyScale(d.poverty))
-    .attr("y", d => yHealthcareScale(d.healthcare));
+    .attr("y", d => yHealthcareScale(d.healthcare))
+    .attr("font-size", "12px")
+    .style("text-anchor", "middle")
+    .attr("dy", "0.3em")
+    .attr("fill", "gold");
 
 
 
