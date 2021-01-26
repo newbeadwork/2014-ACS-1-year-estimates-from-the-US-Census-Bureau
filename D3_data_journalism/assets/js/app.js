@@ -59,13 +59,10 @@ d3.csv("assets/data/data.csv").then(function(healthData) {
   chartGroup.append("g")
     .call(yAxis);
 
-  // line generator
-  var line = d3.line()
-    .x(d => xPovertyScale(d.poverty))
-    .y(d => yHealthcareScale(d.healthcare));
+  
 
-  // append circles
-  var circlesGroup = chartGroup.selectAll("circle")
+  // appending circles
+  chartGroup.selectAll("circle")
     .data(healthData)
     .enter()
     .append("circle")
@@ -75,6 +72,19 @@ d3.csv("assets/data/data.csv").then(function(healthData) {
     .attr("fill", "gold")
     .attr("stroke-width", "1")
     .attr("stroke", "black");
-    
-    
-});
+
+  chartGroup.selectAll("text")
+    .data(healthData)
+    .enter()
+    .append("text")
+    .text(d => d.abbr)
+    .attr("x", d => xPovertyScale(d.poverty))
+    .attr("y", d => yHealthcareScale(d.healthcare));
+
+
+
+
+}
+  , function (error) {
+    console.log(error);
+  });
