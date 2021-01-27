@@ -35,7 +35,7 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
     data.income = +data.income;
     data.healthcare = +data.healthcare;
     data.smokes = +data.smokes;
-    data.obesity = +data.odesity;
+    data.obesity = +data.obesity;
   });
 
   // creating scales
@@ -44,13 +44,13 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
   .domain(d3.extent(healthData, d => d.poverty))
   .range([0, width]);
 
-  var ySmokesScale = d3.scaleLinear()
-    .domain([0, d3.max(healthData, d => d.smokes)])
+  var yHealthScale = d3.scaleLinear()
+    .domain([0, d3.max(healthData, d => d.healthcare)])
     .range([height, 0]);
 
   // creating axes
   var xAxis = d3.axisBottom(xPovertyScale);
-  var yAxis = d3.axisLeft(ySmokesScale).ticks(20);
+  var yAxis = d3.axisLeft(yHealthScale);
 
   // appending axes
   chartGroup.append("g")
@@ -69,7 +69,7 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
     .enter()
     .append("circle")
     .attr("cx", d => xPovertyScale(d.poverty))
-    .attr("cy", d => ySmokesScale(d.smokes))
+    .attr("cy", d => yHealthScale(d.healthcare))
     .attr("r", "12")
     .attr("fill", "green")
     .attr("stroke-width", "1")
@@ -82,7 +82,7 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
     .append("text")
     .text(d => d.abbr)
     .attr("x", d => xPovertyScale(d.poverty))
-    .attr("y", d => ySmokesScale(d.smokes))
+    .attr("y", d => yHealthScale(d.healthcare))
     .attr("font-size", "12px")
     .style("text-anchor", "middle")
     .attr("dy", "0.3em")
@@ -92,23 +92,26 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
      return chartGroup.append("text")
      .attr("text-anchor", "middle")
      .attr("font-size", "16px")
-     .attr("fill", "green")
-     .attr("opacity", 0.3);
+     .attr("fill", "green");
+     
     }
   
   var xLabelPoverty = createLabel()
     .attr("transform", `translate(${width / 2}, ${height + 30})`)
     .attr("class", "xaxis_label")
+    .attr("opacity", 1)
     .text("In Poverty (%)");
 
   var xLabelAge = createLabel()
     .attr("transform", `translate(${width / 2}, ${height + 50})`)
     .attr("class", "xaxis_label")
+    .attr("opacity", 0.3)
     .text("Age (Median)");
 
   var xLabelIncome = createLabel()
     .attr("transform", `translate(${width / 2}, ${height + 70})`)
     .attr("class", "xaxis_label")
+    .attr("opacity", 0.3)
     .text("Household Income (Median), $");
 
   // y-axis title
@@ -118,6 +121,7 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
     .attr("x", 0 - height / 2)
     .attr("y", 0 - 40)
     .attr("dy", "1em")
+    .attr("opacity", 1)
     .text("Lacks Healthcare (%)");
 
   var yLabelSmoke = createLabel()
@@ -126,6 +130,7 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
     .attr("x", 0 - height / 2)
     .attr("y", 0 - 60)
     .attr("dy", "1em")
+    .attr("opacity", 0.3)
     .text("Smokes (%)");
 
   var yLabelObese = createLabel()
@@ -134,7 +139,24 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
     .attr("x", 0 - height / 2)
     .attr("y", 0 - margin.left)
     .attr("dy", "1em")
+    .attr("opacity", 0.3)
     .text("Obese (%)");
+  
+    var toolTip = d3.select("svg")
+    .append("div")
+    .attr("class", "tooltip");
+  
+  
+  function onMouseover(d, i) {
+    toolTip.style("display", "block");
+    toolTip.html(`P: <strong>${d[i]}</strong>`)
+      .style("left", d3.event.pageX + "px")
+      .style("top", d3.event.pageY + "px");
+  }
+  
+  function onMouseout(d, i) {
+    toolTip.style("display", "none");
+  }
 
   function updateX(a, name) {
 
@@ -168,10 +190,13 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
       .attr("x", d => xScale(d[name]));
   }
 
-  
+  circlesGroup.on("mouseover", onMouseover)
+  .on("mouseout", onMouseout);
+
   xLabelPoverty.on("click", function () {
     updateX(this, "poverty")
   });
+  
   xLabelAge.on("click", function () {
     updateX(this, "age")
   });
