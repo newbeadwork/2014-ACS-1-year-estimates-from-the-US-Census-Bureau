@@ -147,16 +147,7 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
     .attr("class", "tooltip");
   
   
-  function onMouseover(d, i) {
-    toolTip.style("display", "block");
-    toolTip.html(`P: <strong>${d[i]}</strong>`)
-      .style("left", d3.event.pageX + "px")
-      .style("top", d3.event.pageY + "px");
-  }
-  
-  function onMouseout(d, i) {
-    toolTip.style("display", "none");
-  }
+    
 
   function updateX(a, name) {
 
@@ -188,8 +179,21 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
       .transition()
       .duration(500)
       .attr("x", d => xScale(d[name]));
+
+    
+  }
+  function onMouseover(d, i) {
+    console.log("tooltip");
+    toolTip.style("display", "block");
+    toolTip.html(`Pizzas eaten: `)
+      .style("left", d3.event.pageX + "px")
+      .style("top", d3.event.pageY + "px");
   }
 
+  function onMouseout(d, i) {
+    console.log("out");
+    toolTip.style("display", "none");
+  }
   circlesGroup.on("mouseover", onMouseover)
   .on("mouseout", onMouseout);
 
