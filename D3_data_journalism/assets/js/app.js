@@ -5,8 +5,8 @@
 
 var svgArea = d3.select("body").select("svg");
 
-var svgWidth = window.innerWidth;
-var svgHeight = window.innerHeight;
+var svgWidth = 960;
+var svgHeight = 500;
 
 var margin = {
   top: 50,
@@ -86,7 +86,30 @@ d3.csv("assets/data/data.csv").then(function(healthData) {
     .attr("dy", "0.3em")
     .attr("fill", "gold");
 
+  chartGroup.append("text")
+    // Position the text
+    // Center the text:
+    // (https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/text-anchor)
+    .attr("transform", `translate(${width / 2}, ${height + margin.top})`)
+    .attr("text-anchor", "middle")
+    .attr("font-size", "16px")
+    .attr("fill", "green")
+    .text("In Poverty (%");
 
+  // y-axis title
+  chartGroup.append("text")
+    // this rotation makes things weird!
+    // x and y placements will seem transposed.
+    .attr("transform", "rotate(-90)")
+    .attr("x", 0 - height / 2)
+    .attr("y", 0 - margin.left)
+    // "em" used to offset the text. 1em is equivalent to 
+    // the font size. For example, if default text is 16px, then 1 em is 16, 
+    // 2 is 32px, etc. Used to dynamically place text regardless of size.
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .attr("fill", "green")
+    .text("Lacks Healthcare (%)"); 
 
 
 }
