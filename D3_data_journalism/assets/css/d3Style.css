@@ -41,15 +41,16 @@
 }
 
 .d3-tip {
-  padding: 6px;
-  font-size: 12px;
-  line-height: 1;
-  line-height: 1.5em;
-  color: #fff;
+  display: block;
+  position: absolute;
+  width: 80px;
+  height: 30px;
+  padding: 2px;
+  font: 12px sans-serif;
   text-align: center;
-  text-transform: capitalize;
-  background: rgba(0, 0, 0, 0.8);
-  border-radius: 4px;
+  background: whitesmoke;
+  border: 0;
+  border-radius: 10px;
 }
 
 /* Mobile Rules */

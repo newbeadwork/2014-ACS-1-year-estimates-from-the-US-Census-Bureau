@@ -88,6 +88,11 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
     .attr("dy", "0.3em")
     .attr("fill", "gold");
 
+    var toolTip = d3.select("body")
+    .append("div")
+    .attr("class", "d3-tip"); 
+     
+
   function createLabel () {
      return chartGroup.append("text")
      .attr("text-anchor", "middle")
@@ -142,10 +147,7 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
     .attr("opacity", 0.3)
     .text("Obese (%)");
   
-    var toolTip = d3.select("svg")
-    .append("div")
-    .attr("class", "tooltip");
-  
+   
   
     
 
@@ -180,22 +182,34 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
       .duration(500)
       .attr("x", d => xScale(d[name]));
 
-    
-  }
-  function onMouseover(d, i) {
-    console.log("tooltip");
-    toolTip.style("display", "block");
-    toolTip.html(`Pizzas eaten: `)
-      .style("left", d3.event.pageX + "px")
-      .style("top", d3.event.pageY + "px");
+      function onMouseover(d, i) {
+        console.log("on");
+        //toolTip.style("display", "block");
+        toolTip.html(`Norway medals<strong>${d[name]}</strong>`)
+          .style("left", d3.event.pageX + "px")
+          .style("top", d3.event.pageY + "px");
+      }
+      circlesGroup.on("mouseover", onMouseover);
   }
 
-  function onMouseout(d, i) {
-    console.log("out");
-    toolTip.style("display", "none");
-  }
-  circlesGroup.on("mouseover", onMouseover)
-  .on("mouseout", onMouseout);
+  
+    
+  
+    /*function onMouseover(healthData, d, i) {
+      console.log("on");
+      //toolTip.style("display", "block");
+      toolTip.html(`Norway medals<strong>${healthData.poverty}</strong>`)
+        .style("left", d3.event.pageX + "px")
+        .style("top", d3.event.pageY + "px");
+    }*/
+    
+   /* function onMouseout(d, i) {
+      console.log("out");
+      toolTip.style("display", "none");
+    }*/
+  
+  //circlesGroup.on("mouseover", onMouseover)
+  //.on("mouseout", onMouseout);
 
   xLabelPoverty.on("click", function () {
     updateX(this, "poverty")
