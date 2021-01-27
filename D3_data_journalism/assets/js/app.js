@@ -3,7 +3,7 @@
 var svgArea = d3.select("body").select("svg");
 
 var svgWidth = 960;
-var svgHeight = 500;
+var svgHeight = 900;
 
 var margin = {
   top: 80,
@@ -31,7 +31,11 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
   // parsing the data
   healthData.forEach(function (data) {
     data.poverty = +data.poverty;
+    data.age = +data.age;
+    data.income = +data.income;
     data.healthcare = +data.healthcare;
+    data.smokes = +data.smokes;
+    data.obesity = +data.odesity;
   });
 
   // creating scales
@@ -40,13 +44,13 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
   .domain(d3.extent(healthData, d => d.poverty))
   .range([0, width]);
 
-  var yHealthcareScale = d3.scaleLinear()
-    .domain([0, d3.max(healthData, d => d.healthcare)])
+  var ySmokesScale = d3.scaleLinear()
+    .domain([0, d3.max(healthData, d => d.smokes)])
     .range([height, 0]);
 
   // creating axes
   var xAxis = d3.axisBottom(xPovertyScale);
-  var yAxis = d3.axisLeft(yHealthcareScale);
+  var yAxis = d3.axisLeft(ySmokesScale).ticks(20);
 
   // appending axes
   chartGroup.append("g")
@@ -65,7 +69,7 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
     .enter()
     .append("circle")
     .attr("cx", d => xPovertyScale(d.poverty))
-    .attr("cy", d => yHealthcareScale(d.healthcare))
+    .attr("cy", d => ySmokesScale(d.smokes))
     .attr("r", "12")
     .attr("fill", "green")
     .attr("stroke-width", "1")
@@ -78,7 +82,7 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
     .append("text")
     .text(d => d.abbr)
     .attr("x", d => xPovertyScale(d.poverty))
-    .attr("y", d => yHealthcareScale(d.healthcare))
+    .attr("y", d => ySmokesScale(d.smokes))
     .attr("font-size", "12px")
     .style("text-anchor", "middle")
     .attr("dy", "0.3em")
