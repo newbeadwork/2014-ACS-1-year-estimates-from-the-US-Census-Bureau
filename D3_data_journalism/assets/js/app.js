@@ -69,7 +69,6 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
     .attr("class", "y_axis")
     .call(yAxis);
 
-//function getData(healthdata)
 
   // appending circles
   var circlesGroup = chartGroup.selectAll("circle")
@@ -96,57 +95,46 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
     .attr("dy", "0.3em")
     .attr("fill", "gold");
 
-  var xLabelPoverty = chartGroup.append("text")
+  function createLabel () {
+     return chartGroup.append("text")
+     .attr("text-anchor", "middle")
+     .attr("font-size", "16px")
+     .attr("fill", "green")
+     .attr("opacity", 0.3);
+    }
+  
+  var xLabelPoverty = createLabel()
     .attr("transform", `translate(${width / 2}, ${height + 30})`)
-    .attr("text-anchor", "middle")
-    .attr("font-size", "16px")
-    .attr("fill", "green")
     .text("In Poverty (%)");
 
-  var xLabelAge = chartGroup.append("text")
+  var xLabelAge = createLabel()
     .attr("transform", `translate(${width / 2}, ${height + 50})`)
-    .attr("text-anchor", "middle")
-    .attr("font-size", "16px")
-    .attr("fill", "green")
-    .attr("opacity", 0.3)
     .text("Age (Median)");
 
-  var xLabelIncome = chartGroup.append("text")
+  var xLabelIncome = createLabel()
     .attr("transform", `translate(${width / 2}, ${height + 70})`)
-    .attr("text-anchor", "middle")
-    .attr("font-size", "16px")
-    .attr("fill", "green")
-    .attr("opacity", 0.3)
-    .text("Household Income (Median)");
+    .text("Household Income (Median), $");
 
   // y-axis title
-  var yLabelHealthcare = chartGroup.append("text")
+  var yLabelHealthcare = createLabel()
     .attr("transform", "rotate(-90)")
     .attr("x", 0 - height / 2)
     .attr("y", 0 - 40)
     .attr("dy", "1em")
-    .style("text-anchor", "middle")
-    .attr("fill", "green")
     .text("Lacks Healthcare (%)");
 
-  var yLabelHealthSmoke = chartGroup.append("text")
+  var yLabelHealthSmoke = createLabel()
     .attr("transform", "rotate(-90)")
     .attr("x", 0 - height / 2)
     .attr("y", 0 - 60)
     .attr("dy", "1em")
-    .style("text-anchor", "middle")
-    .attr("fill", "green")
-    .attr("opacity", 0.3)
     .text("Smokes (%)");
 
-  var yLabelHealthcare = chartGroup.append("text")
+  var yLabelHealthcare = createLabel()
     .attr("transform", "rotate(-90)")
     .attr("x", 0 - height / 2)
     .attr("y", 0 - margin.left)
     .attr("dy", "1em")
-    .style("text-anchor", "middle")
-    .attr("fill", "green")
-    .attr("opacity", 0.3)
     .text("Obese (%)");
 
     function updateX(name) {
