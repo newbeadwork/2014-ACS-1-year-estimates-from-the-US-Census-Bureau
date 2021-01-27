@@ -53,16 +53,17 @@ d3.csv("assets/data/data.csv").then(function(healthData) {
 
   // appending axes
   chartGroup.append("g")
-    .attr("transform", `translate(0, ${height})`)
+    .attr("transform", `translate(0, ${height - 40})`)
     .call(xAxis);
 
   chartGroup.append("g")
+  .attr("transform", `translate(0, -40)`)
     .call(yAxis);
 
   
 
   // appending circles
-  chartGroup.selectAll("circle")
+  var circlesGroup = chartGroup.selectAll("circle")
     .data(healthData)
     .enter()
     .append("circle")
@@ -73,7 +74,7 @@ d3.csv("assets/data/data.csv").then(function(healthData) {
     .attr("stroke-width", "1")
     .attr("stroke", "black");
 
-  chartGroup.selectAll(null)
+  var circlesLabels = chartGroup.selectAll(null)
     .data(healthData)
     .enter()
     .append("g")
@@ -86,18 +87,33 @@ d3.csv("assets/data/data.csv").then(function(healthData) {
     .attr("dy", "0.3em")
     .attr("fill", "gold");
 
-  chartGroup.append("text")
-    // Position the text
-    // Center the text:
-    // (https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/text-anchor)
-    .attr("transform", `translate(${width / 2}, ${height + margin.top})`)
+  var xLabelPoverty = chartGroup.append("text")
+    .attr("transform", `translate(${width / 2}, ${height + margin.top - 55})`)
     .attr("text-anchor", "middle")
     .attr("font-size", "16px")
     .attr("fill", "green")
-    .text("In Poverty (%");
+    .text("In Poverty (%)");
+
+  var xLabelAge = chartGroup.append("text")
+  .attr("transform", `translate(${width / 2}, ${height + margin.top - 35})`)
+  .attr("text-anchor", "middle")
+  .attr("font-size", "16px")
+  .attr("fill", "green")
+  .attr("opacity", 0.3)
+  .text("Age (Median)");
+
+  var xLabelAge = chartGroup.append("text")
+  .attr("transform", `translate(${width / 2}, ${height + margin.top - 15})`)
+  .attr("text-anchor", "middle")
+  .attr("font-size", "16px")
+  .attr("fill", "green")
+  .attr("opacity", 0.3)
+  .text("Household Income (Median)");
+
+
 
   // y-axis title
-  chartGroup.append("text")
+  var yLabel = chartGroup.append("text")
     // this rotation makes things weird!
     // x and y placements will seem transposed.
     .attr("transform", "rotate(-90)")
@@ -111,6 +127,18 @@ d3.csv("assets/data/data.csv").then(function(healthData) {
     .attr("fill", "green")
     .text("Lacks Healthcare (%)"); 
 
+  barsGroup.on("mouseover", function () {
+    d3.select(this)
+      .transition()
+      .duration(500)
+      .attr("fill", "red");
+  })
+    .on("mouseout", function () {
+      d3.select(this)
+        .transition()
+        .duration(500)
+        .attr("fill", "green");
+    });
 
 }
   , function (error) {
