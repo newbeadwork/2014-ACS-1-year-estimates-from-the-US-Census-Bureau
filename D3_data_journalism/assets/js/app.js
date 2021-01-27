@@ -86,7 +86,6 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
 
   function createLabel () {
      return chartGroup.append("text")
-     .attr("class", "axis_label")
      .attr("text-anchor", "middle")
      .attr("font-size", "16px")
      .attr("fill", "green")
@@ -95,19 +94,23 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
   
   var xLabelPoverty = createLabel()
     .attr("transform", `translate(${width / 2}, ${height + 30})`)
+    .attr("class", "xaxis_label")
     .text("In Poverty (%)");
 
   var xLabelAge = createLabel()
     .attr("transform", `translate(${width / 2}, ${height + 50})`)
+    .attr("class", "xaxis_label")
     .text("Age (Median)");
 
   var xLabelIncome = createLabel()
     .attr("transform", `translate(${width / 2}, ${height + 70})`)
+    .attr("class", "xaxis_label")
     .text("Household Income (Median), $");
 
   // y-axis title
   var yLabelHealthcare = createLabel()
     .attr("transform", "rotate(-90)")
+    .attr("class", "yaxis_label")
     .attr("x", 0 - height / 2)
     .attr("y", 0 - 40)
     .attr("dy", "1em")
@@ -115,6 +118,7 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
 
   var yLabelSmoke = createLabel()
     .attr("transform", "rotate(-90)")
+    .attr("class", "yaxis_label")
     .attr("x", 0 - height / 2)
     .attr("y", 0 - 60)
     .attr("dy", "1em")
@@ -122,6 +126,7 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
 
   var yLabelObese = createLabel()
     .attr("transform", "rotate(-90)")
+    .attr("class", "yaxis_label")
     .attr("x", 0 - height / 2)
     .attr("y", 0 - margin.left)
     .attr("dy", "1em")
@@ -129,7 +134,7 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
 
   function updateX(a, name) {
 
-    d3.selectAll(".axis_label")
+    d3.selectAll(".xaxis_label")
       .transition()
       .attr("opacity", 0.3);
 
@@ -159,18 +164,6 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
       .attr("x", d => xScale(d[name]));
   }
 
-  /*function Click() {
-    d3.select(this)
-    .transition()
-    .attr("opacity", 1);
-  }*/
-
- /* function updateThis(a) {
-
-    d3.select(a)
-      .transition()
-      .attr("opacity", 1);    
-  }*/
   
   xLabelPoverty.on("click", function () {
     updateX(this, "poverty")
@@ -182,38 +175,18 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
     updateX(this, "income")
   });
   
-  
-    /* .on("mouseout", function () {
-      d3.select(this)
-        .transition()
-        .attr("opacity", 0.3);
-    });
 
-  xLabelAge.on("click", function () {
-    d3.select(this)
-      .transition()
-      .attr("opacity", 1);
-    updateX("age")
-  })
-    .on("mouseout", function () {
-      d3.select(this)
-        .transition()
-        .attr("opacity", 0.3);
-    });
+  function updateY(a, name) {
+    d3.selectAll(".yaxis_label")
+    .transition()
+    .attr("opacity", 0.3);
 
-  xLabelIncome.on("click", function () {
-    d3.select(this)
-      .transition()
-      .attr("opacity", 1);
-    updateX("income")
-  })
-    .on("mouseout", function () {
-      d3.select(this)
-        .transition()
-        .attr("opacity", 0.3);
-    });
+  d3.select(a)
+    .transition()
+    .attr("opacity", 1);
 
-  function updateY(name) {
+  console.log("works");
+
 
     var yScale = d3.scaleLinear()
       .domain([0, d3.max(healthData, d => d[name])])
@@ -236,44 +209,17 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
       .attr("y", d => yScale(d[name]));
   }
   
-  
   yLabelHealthcare.on("click", function () {
-    d3.select(this)
-      .transition()
-      .attr("opacity", 1);
-    updateY("healthcare")
-  })
-    .on("mouseout", function () {
-      d3.select(this)
-        .transition()
-        .attr("opacity", 0.3);
-    });
-  
-    yLabelSmoke.on("click", function () {
-    d3.select(this)
-      .transition()
-      .attr("opacity", 1);
-    updateY("smokes")
-  })
-    .on("mouseout", function () {
-      d3.select(this)
-        .transition()
-        .attr("opacity", 0.3);
-    });
+    updateY(this, "healthcare")
+  });
+
+  yLabelSmoke.on("click", function () {
+    updateY(this, "smokes")
+  });
 
   yLabelObese.on("click", function () {
-    d3.select(this)
-      .transition()
-      .attr("opacity", 1);
-    updateY("obesity")
-  })
-    .on("mouseout", function () {
-      d3.select(this)
-        .transition()
-        .attr("opacity", 0.3);
-    });*/
-
-  
+    updateY(this, "obesity")
+  });
 
 }
   , function (error) {
