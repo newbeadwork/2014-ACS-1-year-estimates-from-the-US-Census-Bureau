@@ -31,6 +31,13 @@ var chartGroup = svg.append("g")
 //2
 d3.csv("assets/data/data.csv").then(function (healthData) {
   console.log(healthData);
+  value = healthData.map(d => d.values);
+  console.log(value);
+  console.log(d3.keys(healthData));
+  console.log(d3.values(healthData));
+    console.log(healthData.columns);
+    
+
 
   // parsing the data
   healthData.forEach(function (data) {
@@ -62,7 +69,7 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
     .attr("class", "y_axis")
     .call(yAxis);
 
-//unction getData(healthdata)
+//function getData(healthdata)
 
   // appending circles
   var circlesGroup = chartGroup.selectAll("circle")
@@ -142,39 +149,53 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
     .attr("opacity", 0.3)
     .text("Obese (%)");
 
-  xLabelAge.on("mouseover", function () {
+    function updateX(name) {
+      console.log(d3.extent(healthData, d => d.age));
 
-
-
-    var xAgeScale = d3.scaleLinear()
-      .domain(d3.extent(healthData, d => d.age))
-      .range([0, width]);
-    xAxis = d3.axisBottom(xAgeScale);
-    d3.selectAll(".x_axis")
-      .transition()
-      .duration(3000)
-      .call(xAxis);
-
-    circlesGroup
-      .transition()
-      .attr("cx", d => xAgeScale(d.age));
-
-    circlesLabels
-      .transition()
-      .text(d => d.abbr)
-      .attr("x", d => xAgeScale(d.age));
       
-
-
-  });
-
-  /*.on("mouseout", function () {
-      d3.select(this)
+      var xScale = d3.scaleLinear()
+        .domain(d3.extent(healthData, d => d[name]))
+        .range([0, width]);
+      xAxis = d3.axisBottom(xScale);
+      d3.selectAll(".x_axis")
         .transition()
         .duration(500)
-        .attr("fill", "green");
-    });*/
+        .call(xAxis);
+  
+      circlesGroup
+        .transition()
+        .duration(500)
+        .attr("cx", d => xScale(d[name]));
+  
+      circlesLabels
+        .transition()
+        .duration(500)
+        .attr("x", d => xScale(d[name]));
+    }
+  
+  xLabelAge.on("mouseover", function () {
+    d3.select(this)
+      .transition()
+      .attr("opacity", 1);
+    updateX("age")
+  })
+    .on("mouseout", function () {
+      d3.select(this)
+        .transition()
+        .attr("opacity", 0.3);
+    });
 
+  xLabelIncome.on("mouseover", function () {
+    d3.select(this)
+      .transition()
+      .attr("opacity", 1);
+    updateX("income")
+  })
+    .on("mouseout", function () {
+      d3.select(this)
+        .transition()
+        .attr("opacity", 0.3);
+    });
 }
   , function (error) {
     console.log(error);
