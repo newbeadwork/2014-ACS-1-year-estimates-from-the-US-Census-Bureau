@@ -1,4 +1,4 @@
-
+//Creating svg-area for future drawing of a scatter plot
 
 var svgArea = d3.select("body").select("svg");
 
@@ -15,7 +15,7 @@ var margin = {
 var height = svgHeight - margin.top - margin.bottom;
 var width = svgWidth - margin.left - margin.right;
 
-
+//Creating svg
 var svg = d3.select("#scatter")
   .append("svg")
   .attr("height", svgHeight)
@@ -25,10 +25,10 @@ var chartGroup = svg.append("g")
   .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 
-//2
+//Opening data
 d3.csv("assets/data/data.csv").then(function (healthData) {
 
-  // parsing the data
+  //Parsing the data
   healthData.forEach(function (data) {
     data.poverty = +data.poverty;
     data.age = +data.age;
@@ -37,10 +37,12 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
     data.smokes = +data.smokes;
     data.obesity = +data.obesity;
   });
- var name_x = "poverty";
- var name_y = "healthcare";
-  // creating scales
 
+  //Creating variables for x- and y-values for using in tooltips text
+  var name_x = "poverty";
+  var name_y = "healthcare";
+  
+  //Creating initial scales
   var xPovertyScale = d3.scaleLinear()
     .domain(d3.extent(healthData, d => d.poverty))
     .range([0, width]);
@@ -49,33 +51,34 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
     .domain([0, d3.max(healthData, d => d.healthcare)])
     .range([height, 0]);
 
-  // creating axes
+  //Creating initial axes
   var xAxis = d3.axisBottom(xPovertyScale);
   var yAxis = d3.axisLeft(yHealthScale);
 
-  // appending axes
+  //Appending initial axes
   chartGroup.append("g")
     .attr("transform", `translate(0, ${height})`)
-    .attr("class", "x_axis")
+    .attr("class", "x_axis") //adding class for future transition
     .call(xAxis);
 
   chartGroup.append("g")
-    .attr("class", "y_axis")
+    .attr("class", "y_axis") //adding class for future transition
     .call(yAxis);
 
 
-  // appending circles
+  //Appending scatters
   var circlesGroup = chartGroup.selectAll("circle")
     .data(healthData)
     .enter()
     .append("circle")
     .attr("cx", d => xPovertyScale(d.poverty))
     .attr("cy", d => yHealthScale(d.healthcare))
-    .attr("r", "12")
+    .attr("r", "14")
     .attr("fill", "green")
     .attr("stroke-width", "1")
     .attr("stroke", "black");
 
+  //Appending labels for scatters
   var circlesLabels = chartGroup.selectAll(null)
     .data(healthData)
     .enter()
@@ -84,26 +87,32 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
     .text(d => d.abbr)
     .attr("x", d => xPovertyScale(d.poverty))
     .attr("y", d => yHealthScale(d.healthcare))
-    .attr("font-size", "12px")
+    .attr("font-size", "10px")
     .style("text-anchor", "middle")
     .attr("dy", "0.3em")
     .attr("fill", "gold");
 
+  //Creating tooltips
   var toolTip = d3.select("body")
     .append("div")
     .attr("class", "d3-tip");
 
-    function onMouseover(d, i) {
-      console.log(name_x);
-      //toolTip.style("display", "block");
-      toolTip.html(`${d.state} <br> ${name_x}: ${d[name_x]} <br> ${name_y}: ${d[name_y]}`)
-        .style("left", d3.event.pageX + "px")
-        .style("top", d3.event.pageY + "px");
-    }
+  //Creating a function that shows tooltips
+  function onMouseover(d, i) {
+    console.log(name_x);
+    toolTip.style("display", "block");
+    toolTip.html(`<strong>${d.state} <br> ${name_x}: ${d[name_x]} <br> ${name_y}: ${d[name_y]}</strong>`)
+      .style("left", d3.event.pageX + "px")
+      .style("top", d3.event.pageY + "px");
+  }
 
-    circlesGroup.on("mouseover", onMouseover);
-  //`${d.state} <br> poverty: ${d.poverty} <br> lack of healthcare: ${d.healthcare}`
+  //Displaying initial tooltips
+  circlesGroup.on("mouseover", onMouseover)
+    .on("mouseout", function (d, i) {
+      toolTip.style("display", "none");
+    });
 
+  //Creating function for a plot axis labels
   function createLabel() {
     return chartGroup.append("text")
       .attr("text-anchor", "middle")
@@ -112,6 +121,8 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
 
   }
 
+  //Creating 6 axis labels (3 on each axes)
+  // x-axis labels
   var xLabelPoverty = createLabel()
     .attr("transform", `translate(${width / 2}, ${height + 30})`)
     .attr("class", "xaxis_label")
@@ -158,19 +169,23 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
     .attr("opacity", 0.3)
     .text("Obese (%)");
 
-
+  //Creating a function that updates x-axis and it`s values, including tooltips
   function updateX(a) {
 
+    //change in opacity all x-labels
     d3.selectAll(".xaxis_label")
       .transition()
       .attr("opacity", 0.3);
-
+    
+    //change in opacity for an object label
     d3.select(a)
       .transition()
       .attr("opacity", 1);
-
+    
+    //checking on function
     console.log("works");
 
+    // changing x-axis
     var xScale = d3.scaleLinear()
       .domain(d3.extent(healthData, d => d[name_x]))
       .range([0, width]);
@@ -180,6 +195,7 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
       .duration(500)
       .call(xAxis);
 
+    //changing scatters and its labels
     circlesGroup
       .transition()
       .duration(500)
@@ -190,11 +206,14 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
       .duration(500)
       .attr("x", d => xScale(d[name_x]));
 
-      
-    circlesGroup.on("mouseover", onMouseover);
+    //tooltips events
+    circlesGroup.on("mouseover", onMouseover)
+      .on("mouseout", function (d, i) {
+        toolTip.style("display", "none");
+      });
   }
 
-
+  //Initialazing update function for each x-label
   xLabelPoverty.on("click", function () {
     name_x = "poverty";
     updateX(this)
@@ -210,18 +229,23 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
   });
 
 
+   //Creating a function that updates y-axis and it`s values, including tooltips
   function updateY(a) {
+
+    //change in opacity all y-labels
     d3.selectAll(".yaxis_label")
       .transition()
       .attr("opacity", 0.3);
 
+    //change in opacity for an object label
     d3.select(a)
       .transition()
       .attr("opacity", 1);
 
+    //checking on function  
     console.log("works");
 
-
+    // changing y-axis
     var yScale = d3.scaleLinear()
       .domain([0, d3.max(healthData, d => d[name_y])])
       .range([height, 0]);
@@ -232,6 +256,7 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
       .duration(500)
       .call(yAxis);
 
+    //changing scatters and its labels
     circlesGroup
       .transition()
       .duration(500)
@@ -242,9 +267,14 @@ d3.csv("assets/data/data.csv").then(function (healthData) {
       .duration(500)
       .attr("y", d => yScale(d[name_y]));
 
-    circlesGroup.on("mouseover", onMouseover);
+    //tooltips events  
+    circlesGroup.on("mouseover", onMouseover)
+      .on("mouseout", function (d, i) {
+        toolTip.style("display", "none");
+      });
   }
 
+   //Initialazing update function for each y-label
   yLabelHealthcare.on("click", function () {
     name_y = "healthcare";
     updateY(this)
