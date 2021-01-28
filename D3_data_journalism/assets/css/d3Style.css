@@ -43,7 +43,7 @@
 .d3-tip {
   display: block;
   position: absolute;
-  width: 80px;
+  width: 100px;
   height: 60px;
   padding: 2px;
   font: 12px sans-serif;
