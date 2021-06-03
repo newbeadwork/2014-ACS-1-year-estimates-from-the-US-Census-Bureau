@@ -7,7 +7,7 @@ The data set included with the assignment is based on 2014 ACS 1-year estimates 
 
 The project requered creating an interactive scatter plot between the data variables.
 
-
+![7-animated-scatter](Images/7-animated-scatter)
 ![8-tooltip](Images/8-tooltip.gif)
 
 
